@@ -67,8 +67,8 @@ int main() {
 	
 	vector<int> outputVector = mergeSort(inputVector);
 	
-		cout << "Output: ";
-		for (int i = 0; i < outputVector.size(); i++) {
+	cout << "Output: ";
+	for (int i = 0; i < outputVector.size(); i++) {
 		cout << outputVector[i] << " ";
 	}
 }
