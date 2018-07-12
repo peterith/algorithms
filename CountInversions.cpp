@@ -3,12 +3,10 @@
 
 using namespace std;
 
-int inversionCount;
+vector<int> mergeSortAndCountInversions(vector<int> inputVector, int& inversionCount);
+vector<int> merge(vector<int> firstVector, vector<int> secondVector, int& inversionCount);
 
-vector<int> mergeSortAndCountInversions(vector<int> inputVector);
-vector<int> merge(vector<int> firstVector, vector<int> secondVector);
-
-vector<int> mergeSortAndCountInversions(vector<int> inputVector) {
+vector<int> mergeSortAndCountInversions(vector<int> inputVector, int& inversionCount) {
 	vector<int> firstVector, secondVector;
 	
 	if (inputVector.size() == 1) {
@@ -24,11 +22,11 @@ vector<int> mergeSortAndCountInversions(vector<int> inputVector) {
 			}
 		}
 		
-		return merge(mergeSortAndCountInversions(firstVector), mergeSortAndCountInversions(secondVector));
+		return merge(mergeSortAndCountInversions(firstVector, inversionCount), mergeSortAndCountInversions(secondVector, inversionCount), inversionCount);
 	}
 }
 
-vector<int> merge(vector<int> firstVector, vector<int> secondVector) {
+vector<int> merge(vector<int> firstVector, vector<int> secondVector, int& inversionCount) {
 	vector<int> outputVector;
 	int j = 0, k = 0;
 	
@@ -59,7 +57,7 @@ vector<int> merge(vector<int> firstVector, vector<int> secondVector) {
 int main() {
 	
 	vector<int> inputVector;
-	inversionCount = 0;
+	int inversionCount = 0;
 	
 	cout << "Count Inversions" << endl << endl;
 	for (int i = 10; i > 0; i--) {
@@ -72,7 +70,7 @@ int main() {
 	}
 	cout << endl << endl;
 	
-	vector<int> outputVector = mergeSortAndCountInversions(inputVector);
+	vector<int> outputVector = mergeSortAndCountInversions(inputVector, inversionCount);
 	
 	cout << "Output: ";
 	for (int i = 0; i < outputVector.size(); i++) {
