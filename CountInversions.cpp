@@ -11,19 +11,18 @@ vector<int> mergeSortAndCountInversions(vector<int> inputVector, int& inversionC
 	
 	if (inputVector.size() == 1) {
 		return inputVector;
-	} else {
-		
-		for (int i = 0; i < inputVector.size(); i++) {
-			
-			if (i < inputVector.size() / 2) {
-				firstVector.push_back(inputVector[i]);
-			} else {
-				secondVector.push_back(inputVector[i]);
-			}
-		}
-		
-		return merge(mergeSortAndCountInversions(firstVector, inversionCount), mergeSortAndCountInversions(secondVector, inversionCount), inversionCount);
 	}
+	
+	for (int i = 0; i < inputVector.size(); i++) {
+			
+		if (i < inputVector.size() / 2) {
+			firstVector.push_back(inputVector[i]);
+		} else {
+			secondVector.push_back(inputVector[i]);
+		}
+	}
+		
+	return merge(mergeSortAndCountInversions(firstVector, inversionCount), mergeSortAndCountInversions(secondVector, inversionCount), inversionCount);
 }
 
 vector<int> merge(vector<int> firstVector, vector<int> secondVector, int& inversionCount) {
@@ -55,7 +54,6 @@ vector<int> merge(vector<int> firstVector, vector<int> secondVector, int& invers
 }
 
 int main() {
-	
 	vector<int> inputVector;
 	int inversionCount = 0;
 	
