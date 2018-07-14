@@ -32,7 +32,6 @@ Pair findClosestPair(vector<Point> sortedPointsByX, vector<Point> sortedPointsBy
 			rightPointsSortedByX.push_back(sortedPointsByX[i]);
 		}
 	}
-	
 	for (int i = 0; i < sortedPointsByY.size(); i++) {
 		if (sortedPointsByY[i].x <= largestLeftPoint.x) {
 			leftPointsSortedByY.push_back(sortedPointsByY[i]);
@@ -40,7 +39,6 @@ Pair findClosestPair(vector<Point> sortedPointsByX, vector<Point> sortedPointsBy
 			rightPointsSortedByY.push_back(sortedPointsByY[i]);
 		}
 	}
-	
 	if (sortedPointsByX.size() == 2) {
 		return createPair(sortedPointsByX[0], sortedPointsByX[1]);
 	} else {
@@ -51,7 +49,6 @@ Pair findClosestPair(vector<Point> sortedPointsByX, vector<Point> sortedPointsBy
 		Pair closestRightPair = findClosestPair(rightPointsSortedByX, rightPointsSortedByY);
 		double leftPairDistance = calculateDistance(closestLeftPair);
 		double rightPairDistance = calculateDistance(closestRightPair);
-		
 		if (leftPairDistance > rightPairDistance) {
 			minimumDistance = rightPairDistance;
 			closestPair = closestRightPair;
@@ -59,13 +56,10 @@ Pair findClosestPair(vector<Point> sortedPointsByX, vector<Point> sortedPointsBy
 			minimumDistance = leftPairDistance;
 			closestPair = closestLeftPair;
 		}
-		
 		Pair closestSplitPair = findClosestSplitPair(sortedPointsByX, sortedPointsByY, minimumDistance);
-		
 		if (calculateDistance(closestSplitPair) < minimumDistance) {
 			closestPair = closestSplitPair;
 		}
-		
 		return closestPair;
 	}
 }
@@ -98,14 +92,11 @@ Pair findClosestSplitPair(vector<Point> sortedPointsByX, vector<Point> sortedPoi
 			nearByPoints.push_back(sortedPointsByY[i]);
 		}
 	}
-	
 	for (int i = 0; i < nearByPoints.size(); i++) {
 		int maximumNearByPointsCount = 7;
-		
 		if (maximumNearByPointsCount >  nearByPoints.size() - i - 1) {
 			maximumNearByPointsCount = nearByPoints.size() - i - 1;
 		}
-		
 		for (int j = 1; j < maximumNearByPointsCount; j++) {
 			Pair pair = {nearByPoints[i], nearByPoints[i + j]};
 			double distance = calculateDistance(pair);
@@ -116,7 +107,6 @@ Pair findClosestSplitPair(vector<Point> sortedPointsByX, vector<Point> sortedPoi
 			}
 		}
 	}
-	
 	return closestPair;
 }
 
@@ -129,8 +119,6 @@ int main() {
 		v.push_back(createPoint(i,i * i));
 		cout << "<" << v[i - 1].x << "," << v[i - 1].y << "> ";
 	}
-	
 	Pair closestPair = findClosestPair(v, v);
-	
 	cout << endl << endl << "Output: <" << closestPair.firstPoint.x << "," << closestPair.firstPoint.y << "> <" << closestPair.secondPoint.x << "," << closestPair.secondPoint.y << ">";
 }

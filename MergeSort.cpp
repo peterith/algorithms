@@ -11,8 +11,7 @@ vector<int> mergeSort(vector<int> inputVector) {
 	
 	if (inputVector.size() == 1) {
 		return inputVector;
-	}
-		
+	}	
 	for (int i = 0; i < inputVector.size(); i++) {
 		
 		if (i < inputVector.size() / 2) {
@@ -21,7 +20,6 @@ vector<int> mergeSort(vector<int> inputVector) {
 			secondVector.push_back(inputVector[i]);
 		}
 	}
-		
 	return merge(mergeSort(firstVector), mergeSort(secondVector));
 }
 
@@ -30,7 +28,6 @@ vector<int> merge(vector<int> firstVector, vector<int> secondVector) {
 	int j = 0, k = 0;
 	
 	for (int i = 0; i < firstVector.size() + secondVector.size(); i++) {
-		
 		if (j == firstVector.size()) {
 			outputVector.push_back(secondVector[k]);
 			k++;
@@ -45,7 +42,6 @@ vector<int> merge(vector<int> firstVector, vector<int> secondVector) {
 			k++;
 		}
 	}
-	
 	return outputVector;
 }
 
@@ -56,15 +52,12 @@ int main() {
 	for (int i = 10; i > 0; i--) {
 		inputVector.push_back(i);
 	}
-	
 	cout << "Input: ";
 	for (int i = 0; i < 10; i++) {
 		cout << inputVector[i] << " ";
 	}
 	cout << endl << endl;
-	
 	vector<int> outputVector = mergeSort(inputVector);
-	
 	cout << "Output: ";
 	for (int i = 0; i < outputVector.size(); i++) {
 		cout << outputVector[i] << " ";
