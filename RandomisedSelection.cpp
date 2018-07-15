@@ -5,7 +5,7 @@ using namespace std;
 
 int randomSelect(vector<int>& inputVector, int leftLimit, int rightLimit, int orderStatistic);
 int choosePivotPosition(int leftLimit);
-int partitionAroundPivot(vector<int>& inputVector, int pivotPosition, int leftLimit, int rightLimit);
+int partitionAroundPivotAndReturnBoundary(vector<int>& inputVector, int pivotPosition, int leftLimit, int rightLimit);
 void swapPosition(vector<int>& inputVector, int firstPosition, int secondPosition);
 
 int randomSelect(vector<int>& inputVector, int leftLimit, int rightLimit, int orderStatistic) {
@@ -13,7 +13,7 @@ int randomSelect(vector<int>& inputVector, int leftLimit, int rightLimit, int or
 		return inputVector[orderStatistic];
 	}
 	int pivotPosition = choosePivotPosition(leftLimit);
-	int newPivotPosition = partitionAroundPivot(inputVector, pivotPosition, leftLimit, rightLimit);
+	int newPivotPosition = partitionAroundPivotAndReturnBoundary(inputVector, pivotPosition, leftLimit, rightLimit);
 	if (newPivotPosition == orderStatistic) {
 		return inputVector[orderStatistic];
 	} else if (newPivotPosition < orderStatistic) {
@@ -27,7 +27,7 @@ int choosePivotPosition(int leftLimit) {
 	return leftLimit;
 }
 
-int partitionAroundPivot(vector<int>& inputVector, int pivotPosition, int leftLimit, int rightLimit) {
+int partitionAroundPivotAndReturnBoundary(vector<int>& inputVector, int pivotPosition, int leftLimit, int rightLimit) {
 	int pivot = inputVector[pivotPosition];
 	int partitionBoundary = leftLimit;
 	

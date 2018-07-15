@@ -5,7 +5,7 @@ using namespace std;
 
 void quickSort(vector<int>& inputVector, int leftLimit, int rightLimit);
 int choosePivotPosition(int leftLimit);
-int partitionAroundPivot(vector<int>& inputVector, int pivotPosition, int leftLimit, int rightLimit);
+int partitionAroundPivotAndReturnBoundary(vector<int>& inputVector, int pivotPosition, int leftLimit, int rightLimit);
 void swapPosition(vector<int>& inputVector, int firstPosition, int secondPosition);
 
 void quickSort(vector<int>& inputVector, int leftLimit, int rightLimit) {
@@ -13,7 +13,7 @@ void quickSort(vector<int>& inputVector, int leftLimit, int rightLimit) {
 		return;
 	}
 	int pivotPosition = choosePivotPosition(leftLimit);
-	int newPivotPosition = partitionAroundPivot(inputVector, pivotPosition, leftLimit, rightLimit);
+	int newPivotPosition = partitionAroundPivotAndReturnBoundary(inputVector, pivotPosition, leftLimit, rightLimit);
 	quickSort(inputVector, leftLimit, newPivotPosition - 1);
 	quickSort(inputVector, newPivotPosition + 1, rightLimit);
 }
@@ -22,7 +22,7 @@ int choosePivotPosition(int leftLimit) {
 	return leftLimit;
 }
 
-int partitionAroundPivot(vector<int>& inputVector, int pivotPosition, int leftLimit, int rightLimit) {
+int partitionAroundPivotAndReturnBoundary(vector<int>& inputVector, int pivotPosition, int leftLimit, int rightLimit) {
 	int pivot = inputVector[pivotPosition];
 	int partitionBoundary = leftLimit;
 	
