@@ -8,7 +8,7 @@ struct Node;
 struct Edge;
 struct Graph;
 
-void bradthFirstSearch(Graph& graph);
+void breadthFirstSearch(Graph& graph, Node* startingNode);
 
 struct Node {
 	int id;
@@ -26,20 +26,20 @@ struct Graph {
 	vector<Edge*> edges;
 };
 
-void breadthFirstSearch(Graph& graph) {
+void breadthFirstSearch(Graph& graph, Node* startingNode) {
 	queue<Node*> nodesToVisit;
 	
-	graph.nodes[0]->isExplored = true;
-	nodesToVisit.push(graph.nodes[0]);
-	cout << "Starting at node: " << nodesToVisit.front()->id << endl;
+	startingNode->isExplored = true;
+	nodesToVisit.push(startingNode);
 	while(nodesToVisit.size() != 0) {
 		Node* node = nodesToVisit.front();
 		cout << "Visiting node: " << node->id << endl;
 		nodesToVisit.pop();
 		for (int i = 0; i < node->incidentEdges.size(); i++) {
-			if (!node->incidentEdges[i]->secondNode->isExplored) {
-				node->incidentEdges[i]->secondNode->isExplored = true;
-				nodesToVisit.push(node->incidentEdges[i]->secondNode);
+			Node* neighbourNode = node->incidentEdges[i]->secondNode;
+			if (!neighbourNode->isExplored) {
+				neighbourNode->isExplored = true;
+				nodesToVisit.push(neighbourNode);
 			}
 		}
 	}
@@ -77,5 +77,5 @@ int main() {
 		cout << endl;
 	}
 	cout << endl << "Output :" << endl;
-	breadthFirstSearch(graph);
+	breadthFirstSearch(graph, graph.nodes[0]);
 }
