@@ -39,7 +39,6 @@ struct Graph {
 void findStronglyConnectedComponents(Graph& graph) {
 	for (int i = 0; i < graph.nodes.size(); i++) {
 		if (!graph.nodes[i]->isExplored) {
-			graph.nodes[i]->isExplored = true;
 			firstDepthFirstSearch(graph, graph.nodes[i]);
 		}
 	}
@@ -47,19 +46,17 @@ void findStronglyConnectedComponents(Graph& graph) {
 	while (graph.firstDepthFirstSearchStack.size() > 0) {
 		Node* topNode = graph.firstDepthFirstSearchStack.top();
 		if (!topNode->isExplored) {
-			topNode->isExplored = true;
-			topNode->leaderNode = topNode->id;
-			secondDepthFirstSearch(graph, topNode, topNode->leaderNode);
+			secondDepthFirstSearch(graph, topNode, topNode->id);
 		}
 		graph.firstDepthFirstSearchStack.pop();
 	}
 }
 
 void firstDepthFirstSearch(Graph& graph, Node* startingNode) {
+	startingNode->isExplored = true;
 	for (int i = 0; i < startingNode->reverseIncidentEdges.size(); i++) {
 		Node* neighbourNode = startingNode->reverseIncidentEdges[i]->secondNode;
 		if (!neighbourNode->isExplored) {
-			neighbourNode->isExplored = true;
 			firstDepthFirstSearch(graph, neighbourNode);
 		}
 	}
@@ -67,11 +64,11 @@ void firstDepthFirstSearch(Graph& graph, Node* startingNode) {
 }
 
 void secondDepthFirstSearch(Graph& graph, Node* startingNode, int leaderNode) {
+	startingNode->isExplored = true;
 	startingNode->leaderNode = leaderNode;
 	for (int i = 0; i < startingNode->incidentEdges.size(); i++) {
 		Node* neighbourNode = startingNode->incidentEdges[i]->secondNode;
 		if (!neighbourNode->isExplored) {
-			neighbourNode->isExplored = true;
 			secondDepthFirstSearch(graph, neighbourNode, leaderNode);
 		}
 	}
@@ -139,6 +136,6 @@ int main() {
 	cout << endl << "Output:" << endl;
 	findStronglyConnectedComponents(graph);
 	for (int i = 0; i < graph.nodes.size(); i++) {
-		cout << "Node id: " << graph.nodes[i]->id << "; Leader node: " << graph.nodes[i]->leaderNode << endl;
+		cout << "Node id: " << graph.nodes[i]->id << "; Strongly connected components group: " << graph.nodes[i]->leaderNode << endl;
 	}
 }

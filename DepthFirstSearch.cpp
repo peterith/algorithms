@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <queue>
 
 using namespace std;
 
@@ -9,6 +8,9 @@ struct Edge;
 struct Graph;
 
 void depthFirstSearch(Graph& graph, Node* startingNode);
+Graph createGraph();
+void createNodesUpToId(Graph& graph, int maxId);
+void createDirectedEdgeBetween(Node* firstNode, Node* secondNode);
 
 struct Node {
 	int id;
@@ -27,42 +29,48 @@ struct Graph {
 };
 
 void depthFirstSearch(Graph& graph, Node* startingNode) {
+	startingNode->isExplored = true;
 	cout << "Visiting node: " << startingNode->id << endl;
 	for (int i = 0; i < startingNode->incidentEdges.size(); i++) {
 		Node* neighbourNode = startingNode->incidentEdges[i]->secondNode;
 		if (!neighbourNode->isExplored) {
-			neighbourNode->isExplored = true;
 			depthFirstSearch(graph, neighbourNode);
 		}
 	}
 }
 
-int main() {
+Graph createGraph() {
 	Graph graph;
-	
-	for (int i = 0; i < 5; i++) {
+	createNodesUpToId(graph, 5);
+	createDirectedEdgeBetween(graph.nodes[0], graph.nodes[1]);
+	createDirectedEdgeBetween(graph.nodes[1], graph.nodes[2]);
+	createDirectedEdgeBetween(graph.nodes[0], graph.nodes[3]);
+	createDirectedEdgeBetween(graph.nodes[3], graph.nodes[4]);
+	return graph;
+}
+
+void createNodesUpToId(Graph& graph, int maxId) {
+	for (int i = 0; i < maxId; i++) {
 		Node* node = new Node();
 		node->id = i + 1;
 		graph.nodes.push_back(node);
-		//graph.nodes[i]->id = i + 1;
 	}
-	
-	for (int i = 0; i < 4; i++) {
-		Edge* edge = new Edge();
-		edge->firstNode = graph.nodes[i];
-		edge->secondNode = graph.nodes[i + 1];
-		graph.nodes[i]->incidentEdges.push_back(edge);
-	}
-	
+}
+
+void createDirectedEdgeBetween(Node* firstNode, Node* secondNode) {
 	Edge* edge = new Edge();
-	edge->firstNode = graph.nodes[0];
-	edge->secondNode = graph.nodes[4];
-	graph.nodes[0]->incidentEdges.push_back(edge);
+	edge->firstNode = firstNode;
+	edge->secondNode = secondNode;
+	firstNode->incidentEdges.push_back(edge);
+}
+
+int main() {
+	Graph graph = createGraph();
 	
-	cout << "Depth First Search" << endl << endl;
-	cout << "Input:" << endl;
+	cout << "Depth First Search" << endl;
+	cout << endl << "Input:" << endl;
 	for (int i = 0; i < graph.nodes.size(); i++) {
-		cout << "Node id: " << graph.nodes[i]->id << ", Incident to Node(s): ";
+		cout << "Node id: " << graph.nodes[i]->id << "; Incident to node(s): ";
 		for (int j = 0; j < graph.nodes[i]->incidentEdges.size(); j++) {
 			cout << graph.nodes[i]->incidentEdges[j]->secondNode->id << " ";
 		}
