@@ -86,9 +86,9 @@ struct Graph {
 	void displayInputNodes() {
 		std::cout << "Input:" << std::endl;
 		for (int i = 0; i < allNodes.size(); i++) {
-			std::cout << "Node id: " << allNodes[i]->id << "; Incident to node(s): ";
+			std::cout << "Node id: " << allNodes[i]->id << "; Adjacent (node id, edge length): ";
 			for (int j = 0; j < allNodes[i]->incidentEdges.size(); j++) {
-				std::cout << allNodes[i]->incidentEdges[j]->secondNode->id << " ";
+				std::cout << "(" << allNodes[i]->incidentEdges[j]->secondNode->id << "," << allNodes[i]->incidentEdges[j]->length << ") ";
 			}
 			std::cout << std::endl;
 		}
