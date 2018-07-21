@@ -46,30 +46,38 @@ struct Graph {
 		while(processedNodes.size() != allNodes.size()) {
 			Edge* edgeToAdd = NULL;
 			int shortestLength = INT_MAX;
-			for (int i = 0; i < processedNodes.size(); i++) {
-				for (int j = 0; j < processedNodes[i]->incidentEdges.size(); j++) {
-					Edge* currentEdge = processedNodes[i]->incidentEdges[j];
-					if (!currentEdge->secondNode->isExplored) {
-						if (currentEdge->length < shortestLength) {
-							shortestLength = currentEdge->length;
-							edgeToAdd = currentEdge;
-						}
-					}
-				}
-			}
-			for (int i = 0; i < processedNodes.size(); i++) {
-				for (int j = 0; j < processedNodes[i]->reverseIncidentEdges.size(); j++) {
-					Edge* currentEdge = processedNodes[i]->reverseIncidentEdges[j];
-					if (!currentEdge->secondNode->isExplored) {
-						if (currentEdge->length < shortestLength) {
-							shortestLength = currentEdge->length;
-							edgeToAdd = currentEdge;
-						}
-					}
-				}
-			}
+			searchIncidentEdges(edgeToAdd, shortestLength);
+			searchReverseIncidentEdges(edgeToAdd, shortestLength);
 			processNode(edgeToAdd->secondNode);
 			minimumSpanningEdges.push_back(edgeToAdd);
+		}
+	}
+	
+	void searchIncidentEdges(Edge*& edgeToAdd, int& shortestLength) {
+		for (int i = 0; i < processedNodes.size(); i++) {
+			for (int j = 0; j < processedNodes[i]->incidentEdges.size(); j++) {
+				Edge* currentEdge = processedNodes[i]->incidentEdges[j];
+				if (!currentEdge->secondNode->isExplored) {
+					if (currentEdge->length < shortestLength) {
+						shortestLength = currentEdge->length;
+						edgeToAdd = currentEdge;
+					}
+				}
+			}
+		}
+	}
+	
+	void searchReverseIncidentEdges(Edge*& edgeToAdd, int& shortestLength) {
+		for (int i = 0; i < processedNodes.size(); i++) {
+			for (int j = 0; j < processedNodes[i]->reverseIncidentEdges.size(); j++) {
+				Edge* currentEdge = processedNodes[i]->reverseIncidentEdges[j];
+				if (!currentEdge->secondNode->isExplored) {
+					if (currentEdge->length < shortestLength) {
+						shortestLength = currentEdge->length;
+						edgeToAdd = currentEdge;
+					}
+				}
+			}
 		}
 	}
 	
