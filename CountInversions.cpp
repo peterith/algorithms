@@ -1,69 +1,79 @@
 #include <iostream>
 #include <vector>
 
-using namespace std;
+std::vector<int> inputVector;
+int inversionCount = 0;
 
-vector<int> mergeSortAndCountInversions(vector<int> inputVector, int& inversionCount);
-vector<int> merge(vector<int> firstVector, vector<int> secondVector, int& inversionCount);
+void mergeSortAndCountInversions(int low, int high);
+void merge(int low, int high);
 
-vector<int> mergeSortAndCountInversions(vector<int> inputVector, int& inversionCount) {
-	vector<int> firstVector, secondVector;
-	
-	if (inputVector.size() == 1) {
-		return inputVector;
+void mergeSortAndCountInversions(int low, int high) {
+	if (high > low) {
+		mergeSortAndCountInversions(low, (high + low) / 2);
+		mergeSortAndCountInversions(((high + low) / 2) + 1, high);
+		merge(low, high);
 	}
-	for (int i = 0; i < inputVector.size(); i++) {
-		if (i < inputVector.size() / 2) {
-			firstVector.push_back(inputVector[i]);
-		} else {
-			secondVector.push_back(inputVector[i]);
-		}
-	}
-	return merge(mergeSortAndCountInversions(firstVector, inversionCount), mergeSortAndCountInversions(secondVector, inversionCount), inversionCount);
 }
 
-vector<int> merge(vector<int> firstVector, vector<int> secondVector, int& inversionCount) {
-	vector<int> outputVector;
+void merge(int low, int high) {
+	std::vector<int> firstVector, secondVector;
 	int j = 0, k = 0;
-	
-	for (int i = 0; i < firstVector.size() + secondVector.size(); i++) {
+	for (int i = low; i <= high; i++) {
+		if (i <= (high + low) / 2)
+			firstVector.push_back(inputVector[i]);
+		else
+			secondVector.push_back(inputVector[i]);
+	}
+	for (int i = low; i <= high; i++) {
 		if (j == firstVector.size()) {
-			outputVector.push_back(secondVector[k]);
+			inputVector[i] = secondVector[k];
 			k++;
 		} else if (k == secondVector.size()) {
-			outputVector.push_back(firstVector[j]);
+			inputVector[i] = firstVector[j];
 			j++;
-		} else if (firstVector[j] < secondVector[k]) {
-			outputVector.push_back(firstVector[j]);
+		} else if (firstVector[j] <= secondVector[k]) {
+			inputVector[i] = firstVector[j];
 			j++;
 		} else {
-			outputVector.push_back(secondVector[k]);
+			inputVector[i] = secondVector[k];
 			k++;
-			for (int l = j; l <= firstVector.size() - 1; l++) {
+				for (int l = j; l <= firstVector.size() - 1; l++) {
 				inversionCount++;
 			}
 		}
 	}
-	return outputVector;
 }
 
-int main() {
-	vector<int> inputVector;
-	int inversionCount = 0;
-	
-	cout << "Count Inversions" << endl << endl;
+void displayTitle() {
+	std::cout << "Count Inversions" << std::endl << std::endl;
+}
+
+void createVector() {
 	for (int i = 10; i > 0; i--) {
 		inputVector.push_back(i);
 	}
-	cout << "Input: ";
-	for (int i = 0; i < 10; i++) {
-		cout << inputVector[i] << " ";
+}
+
+void displayInput() {
+	std::cout << "Input: ";
+	for (int i = 0; i < inputVector.size(); i++) {
+		std::cout << inputVector[i] << " ";
 	}
-	cout << endl << endl;
-	vector<int> outputVector = mergeSortAndCountInversions(inputVector, inversionCount);
-	cout << "Output: ";
-	for (int i = 0; i < outputVector.size(); i++) {
-		cout << outputVector[i] << " ";
+	std::cout << std::endl << std::endl;
+}
+
+void displayOutput() {
+	std::cout << "Output: ";
+	for (int i = 0; i < inputVector.size(); i++) {
+		std::cout << inputVector[i] << " ";
 	}
-	cout << endl << "Total inversions: " << inversionCount;
+	std::cout << std::endl << "Total inversions: " << inversionCount;
+}
+
+int main() {
+	displayTitle();
+	createVector();
+	displayInput();
+	mergeSortAndCountInversions(0, inputVector.size() - 1);
+	displayOutput();
 }

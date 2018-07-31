@@ -59,7 +59,7 @@ void createVector() {
 
 void displayInput() {
 	std::cout << "Input: ";
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < inputVector.size(); i++) {
 		std::cout << inputVector[i] << " ";
 	}
 	std::cout << std::endl << std::endl;
@@ -67,7 +67,7 @@ void displayInput() {
 
 void displayOutput() {
 	std::cout << "Output: ";
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < inputVector.size(); i++) {
 		std::cout << inputVector[i] << " ";
 	}
 }

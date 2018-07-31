@@ -1,65 +1,74 @@
 #include <iostream>
 #include <vector>
 
-using namespace std;
+std::vector<int> inputVector;
 
-vector<int> mergeSort(vector<int> inputVector);
-vector<int> merge(vector<int> firstVector, vector<int> secondVector);
+void mergeSort(int low, int high);
+void merge(int low, int high);
 
-vector<int> mergeSort(vector<int> inputVector) {
-	vector<int> firstVector, secondVector;
-	
-	if (inputVector.size() == 1) {
-		return inputVector;
-	}	
-	for (int i = 0; i < inputVector.size(); i++) {
-		
-		if (i < inputVector.size() / 2) {
-			firstVector.push_back(inputVector[i]);
-		} else {
-			secondVector.push_back(inputVector[i]);
-		}
+void mergeSort(int low, int high) {
+	if (high > low) {
+		mergeSort(low, (high + low) / 2);
+		mergeSort(((high + low) / 2) + 1, high);
+		merge(low, high);
 	}
-	return merge(mergeSort(firstVector), mergeSort(secondVector));
 }
 
-vector<int> merge(vector<int> firstVector, vector<int> secondVector) {
-	vector<int> outputVector;
+void merge(int low, int high) {
+	std::vector<int> firstVector, secondVector;
 	int j = 0, k = 0;
-	
-	for (int i = 0; i < firstVector.size() + secondVector.size(); i++) {
+	for (int i = low; i <= high; i++) {
+		if (i <= (high + low) / 2)
+			firstVector.push_back(inputVector[i]);
+		else
+			secondVector.push_back(inputVector[i]);
+	}
+	for (int i = low; i <= high; i++) {
 		if (j == firstVector.size()) {
-			outputVector.push_back(secondVector[k]);
+			inputVector[i] = secondVector[k];
 			k++;
 		} else if (k == secondVector.size()) {
-			outputVector.push_back(firstVector[j]);
+			inputVector[i] = firstVector[j];
 			j++;
-		} else if (firstVector[j] < secondVector[k]) {
-			outputVector.push_back(firstVector[j]);
+		} else if (firstVector[j] <= secondVector[k]) {
+			inputVector[i] = firstVector[j];
 			j++;
 		} else {
-			outputVector.push_back(secondVector[k]);
+			inputVector[i] = secondVector[k];
 			k++;
 		}
 	}
-	return outputVector;
 }
 
-int main() {
-	vector<int> inputVector;
-	
-	cout << "Merge Sort" << endl << endl;
+void displayTitle() {
+	std::cout << "Merge Sort" << std::endl << std::endl;
+}
+
+void createVector() {
 	for (int i = 10; i > 0; i--) {
 		inputVector.push_back(i);
 	}
-	cout << "Input: ";
-	for (int i = 0; i < 10; i++) {
-		cout << inputVector[i] << " ";
+}
+
+void displayInput() {
+	std::cout << "Input: ";
+	for (int i = 0; i < inputVector.size(); i++) {
+		std::cout << inputVector[i] << " ";
 	}
-	cout << endl << endl;
-	vector<int> outputVector = mergeSort(inputVector);
-	cout << "Output: ";
-	for (int i = 0; i < outputVector.size(); i++) {
-		cout << outputVector[i] << " ";
+	std::cout << std::endl << std::endl;
+}
+
+void displayOutput() {
+	std::cout << "Output: ";
+	for (int i = 0; i < inputVector.size(); i++) {
+		std::cout << inputVector[i] << " ";
 	}
+}
+
+int main() {
+	displayTitle();
+	createVector();
+	displayInput();
+	mergeSort(0, inputVector.size() - 1);
+	displayOutput();
 }
