@@ -46,9 +46,8 @@ struct Graph {
 			Node* nodeToUpdate = NULL;
 			int shortestLength = INT_MAX;
 			searchForNodeWithShortestLength(nodeToUpdate, shortestLength);
-			if (nodeToUpdate != NULL) {
+			if (nodeToUpdate != NULL)
 				updateNodeWithShortestLength(nodeToUpdate, shortestLength);
-			}
 		}
 	}
 	
@@ -74,9 +73,8 @@ struct Graph {
 	}
 	
 	void createNodesUpToId(int maxNodeId) {
-		for (int i = 0; i < maxNodeId; i++) {
+		for (int i = 0; i < maxNodeId; i++)
 			allNodes.push_back(new Node(i + 1));
-		}
 	}
 	
 	void createDirectedEdge(int firstNodeId, int secondNodeId, int length) {
@@ -87,9 +85,8 @@ struct Graph {
 		std::cout << "Input:" << std::endl;
 		for (int i = 0; i < allNodes.size(); i++) {
 			std::cout << "Node id: " << allNodes[i]->id << "; Adjacent (node id, edge length): ";
-			for (int j = 0; j < allNodes[i]->incidentEdges.size(); j++) {
+			for (int j = 0; j < allNodes[i]->incidentEdges.size(); j++)
 				std::cout << "(" << allNodes[i]->incidentEdges[j]->secondNode->id << "," << allNodes[i]->incidentEdges[j]->length << ") ";
-			}
 			std::cout << std::endl;
 		}
 		std::cout << std::endl;
@@ -97,9 +94,8 @@ struct Graph {
 	
 	void displayOutputNodes() {
 		std::cout << "Output:" << std::endl;
-		for (int i = 0; i < allNodes.size(); i++) {
+		for (int i = 0; i < allNodes.size(); i++)
 			std::cout << "Node id: " << allNodes[i]->id << "; Shortest length from node id 1: " << allNodes[i]->shortestLength << std::endl;
-		}
 	}
 };
 

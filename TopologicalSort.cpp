@@ -2,87 +2,92 @@
 #include <vector>
 #include <queue>
 
-using namespace std;
-
 struct Node;
 struct Edge;
 struct Graph;
 
-void topologicalSort(Graph& graph);
-void depthFirstSearch(Graph& graph, Node* startingNode, int& currentLabel);
-
 struct Node {
 	int id;
-	vector<Edge*> incidentEdges;
-	bool isExplored = false;
+	std::vector<Edge*> incidentEdges;
+	bool isExplored;
 	int topologicalOrder;
+	
+	Node(int id) : id(id), isExplored(false) {}
 };
 
 struct Edge {
 	Node* firstNode;
 	Node* secondNode;
+	
+	Edge(Node* firstNode, Node* secondNode) : firstNode(firstNode), secondNode(secondNode) {}
 };
 
 struct Graph {
-	vector<Node*> nodes;
-	vector<Edge*> edges;
+	std::vector<Node*> nodes;
+	std::vector<Edge*> edges;
+	
+	Graph() {
+		createNodesUpToId(5);
+		createDirectedEdge(0, 1);
+		createDirectedEdge(1, 2);
+		createDirectedEdge(2, 3);
+		createDirectedEdge(0, 4);
+	}
+	
+	void topologicalSort() {
+		int currentLabel = nodes.size();
+		for (int i = 0; i < nodes.size(); i++) {
+			if (!nodes[i]->isExplored)
+				depthFirstSearch(nodes[i], currentLabel);
+		}
+	}
+	
+	void depthFirstSearch(Node* startingNode, int& currentLabel) {
+		for (int i = 0; i < startingNode->incidentEdges.size(); i++) {
+			Node* neighbourNode = startingNode->incidentEdges[i]->secondNode;
+			if (!neighbourNode->isExplored) {
+				neighbourNode->isExplored = true;
+				depthFirstSearch(neighbourNode, currentLabel);
+			}
+		}
+		startingNode->topologicalOrder = currentLabel;
+		currentLabel--;
+	}
+	
+	void createNodesUpToId(int maxId) {
+		for (int i = 0; i < maxId; i++)
+			nodes.push_back(new Node(i + 1));
+	}
+
+	void createDirectedEdge(int firstNodeId, int secondNodeId) {
+		nodes[firstNodeId]->incidentEdges.push_back(new Edge(nodes[firstNodeId], nodes[secondNodeId]));
+	}
+	
+	void displayInputNodes() {
+		std::cout << "Input:" << std::endl;
+		for (int i = 0; i < nodes.size(); i++) {
+			std::cout << "Node id: " << nodes[i]->id << "; Adjacent node id(s): ";
+			for (int j = 0; j < nodes[i]->incidentEdges.size(); j++)
+				std::cout << nodes[i]->incidentEdges[j]->secondNode->id << " ";
+			std::cout << std::endl;
+		}
+		std::cout << std::endl;
+	}
+	
+	void displayOutputNodes() {
+		std::cout << "Output:" << std::endl;
+		for (int i = 0; i < nodes.size(); i++)
+			std::cout << "Node id: " << nodes[i]->id << "; Topological order: " << nodes[i]->topologicalOrder << std::endl;
+	}
 };
 
-void topologicalSort(Graph& graph) {
-	int currentLabel = graph.nodes.size();
-	for (int i = 0; i < graph.nodes.size(); i++) {
-		if (!graph.nodes[i]->isExplored) {
-			depthFirstSearch(graph, graph.nodes[i], currentLabel);
-		}
-	}
-}
-
-void depthFirstSearch(Graph& graph, Node* startingNode, int& currentLabel) {
-	for (int i = 0; i < startingNode->incidentEdges.size(); i++) {
-		Node* neighbourNode = startingNode->incidentEdges[i]->secondNode;
-		if (!neighbourNode->isExplored) {
-			neighbourNode->isExplored = true;
-			depthFirstSearch(graph, neighbourNode, currentLabel);
-		}
-	}
-	startingNode->topologicalOrder = currentLabel;
-	currentLabel--;
+void displayTitle() {
+	std::cout << "Topological Ordering" << std::endl << std::endl;
 }
 
 int main() {
-	Graph graph;
-	
-	for (int i = 0; i < 5; i++) {
-		Node* node = new Node();
-		node->id = i + 1;
-		graph.nodes.push_back(node);
-		//graph.nodes[i]->id = i + 1;
-	}
-	
-	for (int i = 0; i < 3; i++) {
-		Edge* edge = new Edge();
-		edge->firstNode = graph.nodes[i];
-		edge->secondNode = graph.nodes[i + 1];
-		graph.nodes[i]->incidentEdges.push_back(edge);
-	}
-	
-	Edge* edge = new Edge();
-	edge->firstNode = graph.nodes[0];
-	edge->secondNode = graph.nodes[4];
-	graph.nodes[0]->incidentEdges.push_back(edge);
-	
-	cout << "Topological Ordering" << endl << endl;
-	cout << "Input:" << endl;
-	for (int i = 0; i < graph.nodes.size(); i++) {
-		cout << "Node id: " << graph.nodes[i]->id << ", Incident to Node(s): ";
-		for (int j = 0; j < graph.nodes[i]->incidentEdges.size(); j++) {
-			cout << graph.nodes[i]->incidentEdges[j]->secondNode->id << " ";
-		}
-		cout << endl;
-	}
-	cout << endl << "Output:" << endl;
-	topologicalSort(graph);
-	for (int i = 0; i < graph.nodes.size(); i++) {
-		cout << "Node id: " << graph.nodes[i]->id << ", Topological order: " << graph.nodes[i]->topologicalOrder << endl;
-	}
+	Graph* graph = new Graph();
+	graph->displayInputNodes();
+	graph->topologicalSort();
+	graph->displayOutputNodes();
 }

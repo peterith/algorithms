@@ -2,80 +2,87 @@
 #include <vector>
 #include <queue>
 
-using namespace std;
-
 struct Node;
 struct Edge;
 struct Graph;
 
-void breadthFirstSearch(Graph& graph, Node* startingNode);
-
 struct Node {
 	int id;
-	vector<Edge*> incidentEdges;
-	bool isExplored = false;
+	std::vector<Edge*> incidentEdges;
+	bool isExplored;
+	
+	Node(int id) : id(id), isExplored(false) {}
 };
 
 struct Edge {
 	Node* firstNode;
 	Node* secondNode;
+	
+	Edge(Node* firstNode, Node* secondNode) : firstNode(firstNode), secondNode(secondNode) {}
 };
 
 struct Graph {
-	vector<Node*> nodes;
-	vector<Edge*> edges;
-};
-
-void breadthFirstSearch(Graph& graph, Node* startingNode) {
-	queue<Node*> nodesToVisit;
+	std::vector<Node*> nodes;
+	std::vector<Edge*> edges;
+	std::queue<Node*> nodesToVisit;
 	
-	startingNode->isExplored = true;
-	nodesToVisit.push(startingNode);
-	while(nodesToVisit.size() != 0) {
-		Node* node = nodesToVisit.front();
-		cout << "Visiting node: " << node->id << endl;
-		nodesToVisit.pop();
-		for (int i = 0; i < node->incidentEdges.size(); i++) {
-			Node* neighbourNode = node->incidentEdges[i]->secondNode;
-			if (!neighbourNode->isExplored) {
-				neighbourNode->isExplored = true;
-				nodesToVisit.push(neighbourNode);
+	Graph() {
+		createNodesUpToId(5);
+		createDirectedEdge(0, 1);
+		createDirectedEdge(1, 2);
+		createDirectedEdge(0, 3);
+		createDirectedEdge(3, 4);
+	}
+	
+	void breadthFirstSearch(Node* startingNode) {
+		startingNode->isExplored = true;
+		nodesToVisit.push(startingNode);
+		while(nodesToVisit.size() != 0) {
+			Node* node = nodesToVisit.front();
+			std::cout << "Visiting node: " << node->id << std::endl;
+			nodesToVisit.pop();
+			for (int i = 0; i < node->incidentEdges.size(); i++) {
+				Node* neighbourNode = node->incidentEdges[i]->secondNode;
+				if (!neighbourNode->isExplored) {
+					neighbourNode->isExplored = true;
+					nodesToVisit.push(neighbourNode);
+				}
 			}
 		}
 	}
+	
+	void createNodesUpToId(int maxId) {
+		for (int i = 0; i < maxId; i++)
+			nodes.push_back(new Node(i + 1));
+	}
+
+	void createDirectedEdge(int firstNodeId, int secondNodeId) {
+		nodes[firstNodeId]->incidentEdges.push_back(new Edge(nodes[firstNodeId], nodes[secondNodeId]));
+	}
+	
+	void displayInputNodes() {
+		std::cout << "Input:" << std::endl;
+		for (int i = 0; i < nodes.size(); i++) {
+			std::cout << "Node id: " << nodes[i]->id << "; Adjacent node id(s): ";
+			for (int j = 0; j < nodes[i]->incidentEdges.size(); j++)
+				std::cout << nodes[i]->incidentEdges[j]->secondNode->id << " ";
+			std::cout << std::endl;
+		}
+		std::cout << std::endl;
+	}
+	
+	void displayVisitedNodes() {
+		std::cout << "Output:" << std::endl;
+		breadthFirstSearch(nodes[0]);
+	}
+};
+
+void displayTitle() {
+	std::cout << "Breath First Search" << std::endl << std::endl;
 }
 
 int main() {
-	Graph graph;
-	
-	for (int i = 0; i < 5; i++) {
-		Node* node = new Node();
-		node->id = i + 1;
-		graph.nodes.push_back(node);
-		//graph.nodes[i]->id = i + 1;
-	}
-	
-	for (int i = 0; i < 4; i++) {
-		Edge* edge = new Edge();
-		edge->firstNode = graph.nodes[i];
-		edge->secondNode = graph.nodes[i + 1];
-		graph.nodes[i]->incidentEdges.push_back(edge);
-	}
-	
-	Edge* edge = new Edge();
-	edge->firstNode = graph.nodes[0];
-	edge->secondNode = graph.nodes[4];
-	graph.nodes[0]->incidentEdges.push_back(edge);
-	
-	cout << "Breath First Search" << endl << endl;
-	cout << "Input:" << endl;
-	for (int i = 0; i < graph.nodes.size(); i++) {
-		cout << "Node id: " << graph.nodes[i]->id << ", Incident to Node(s): ";
-		for (int j = 0; j < graph.nodes[i]->incidentEdges.size(); j++) {
-			cout << graph.nodes[i]->incidentEdges[j]->secondNode->id << " ";
-		}
-		cout << endl;
-	}
-	cout << endl << "Output :" << endl;
-	breadthFirstSearch(graph, graph.nodes[0]);
+	Graph* graph = new Graph();
+	graph->displayInputNodes();
+	graph->displayVisitedNodes();
 }

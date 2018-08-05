@@ -45,24 +45,21 @@ void displayTitle() {
 }
 
 void createVector() {
-	for (int i = 10; i > 0; i--) {
+	for (int i = 10; i > 0; i--)
 		inputVector.push_back(i);
-	}
 }
 
 void displayInput() {
 	std::cout << "Input: ";
-	for (int i = 0; i < inputVector.size(); i++) {
+	for (int i = 0; i < inputVector.size(); i++)
 		std::cout << inputVector[i] << " ";
-	}
 	std::cout << std::endl << std::endl;
 }
 
 void displayOutput() {
 	std::cout << "Output: ";
-	for (int i = 0; i < inputVector.size(); i++) {
+	for (int i = 0; i < inputVector.size(); i++)
 		std::cout << inputVector[i] << " ";
-	}
 }
 
 int main() {
