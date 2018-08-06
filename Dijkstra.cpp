@@ -1,10 +1,12 @@
 #include <iostream>
 #include <vector>
+#include <queue>
 #include <limits>
 
 struct Node;
 struct Edge;
 struct Graph;
+struct minHeap;
 
 struct Node {
 	int id;
@@ -12,7 +14,7 @@ struct Node {
 	bool isExplored;
 	int shortestLength;
 	
-	Node(int id) : id(id), isExplored(false) {}
+	Node(int id) : id(id), isExplored(false), shortestLength(INT_MAX) {}
 };
 
 struct Edge {
@@ -23,10 +25,16 @@ struct Edge {
 	Edge(Node* firstNode, Node* secondNode, int length) : firstNode(firstNode), secondNode(secondNode), length(length) {}
 };
 
+struct minHeap {
+	bool operator()(Node* firstNode, Node* secondNode) {
+		return firstNode->shortestLength > secondNode->shortestLength;
+	}
+};
+
 struct Graph {
-	std::vector<Node*> allNodes;
+	std::vector<Node*> nodes;
 	std::vector<Edge*> edges;
-	std::vector<Node*> processedNodes;
+	std::priority_queue<Node*, std::vector<Node*>, minHeap> minimumLengthHeap;
 	
 	Graph() {
 		createNodesUpToId(6);
@@ -41,31 +49,19 @@ struct Graph {
 	}
 	
 	void calculateShortestPathFrom(int startingNodeId) {
-		updateNodeWithShortestLength(allNodes[startingNodeId], 0);
-		while(processedNodes.size() != allNodes.size()) {
-			Node* nodeToUpdate = NULL;
-			int shortestLength = INT_MAX;
-			searchForNodeWithShortestLength(nodeToUpdate, shortestLength);
-			if (nodeToUpdate != NULL)
-				updateNodeWithShortestLength(nodeToUpdate, shortestLength);
-		}
-	}
-	
-	void updateNodeWithShortestLength(Node* nodeToUpdate, int shortestLength) {
-		nodeToUpdate->isExplored = true;
-		nodeToUpdate->shortestLength = shortestLength;
-		processedNodes.push_back(nodeToUpdate);
-	}
-	
-	void searchForNodeWithShortestLength(Node*& nodeToUpdate, int& shortestLength) {
-		for (int i = 0; i < processedNodes.size(); i++) {
-			for (int j = 0; j < processedNodes[i]->incidentEdges.size(); j++) {
-				Edge* currentEdge = processedNodes[i]->incidentEdges[j];
-				if (!currentEdge->secondNode->isExplored) {
-					int potentialShortestLength = processedNodes[i]->shortestLength + currentEdge->length;
-					if (potentialShortestLength < shortestLength) {
-						shortestLength = potentialShortestLength;
-						nodeToUpdate = currentEdge->secondNode;
+		nodes[startingNodeId]->shortestLength = 0;
+		minimumLengthHeap.push(nodes[startingNodeId]);
+		while (!minimumLengthHeap.empty()) {
+			Node* nodeToProcess = minimumLengthHeap.top();
+			minimumLengthHeap.pop();
+			nodeToProcess->isExplored = true;
+			for (int i = 0; i < nodeToProcess->incidentEdges.size(); i++) {
+				Node* neighbourNode = nodeToProcess->incidentEdges[i]->secondNode;
+				if (!neighbourNode->isExplored) {
+					int length = nodeToProcess->shortestLength + nodeToProcess->incidentEdges[i]->length;
+					if (length < neighbourNode->shortestLength) {
+						neighbourNode->shortestLength = length;
+						minimumLengthHeap.push(neighbourNode);
 					}
 				}
 			}
@@ -74,19 +70,19 @@ struct Graph {
 	
 	void createNodesUpToId(int maxNodeId) {
 		for (int i = 0; i < maxNodeId; i++)
-			allNodes.push_back(new Node(i + 1));
+			nodes.push_back(new Node(i + 1));
 	}
 	
 	void createDirectedEdge(int firstNodeId, int secondNodeId, int length) {
-		allNodes[firstNodeId]->incidentEdges.push_back(new Edge(allNodes[firstNodeId], allNodes[secondNodeId], length));
+		nodes[firstNodeId]->incidentEdges.push_back(new Edge(nodes[firstNodeId], nodes[secondNodeId], length));
 	}
 	
 	void displayInputNodes() {
 		std::cout << "Input:" << std::endl;
-		for (int i = 0; i < allNodes.size(); i++) {
-			std::cout << "Node id: " << allNodes[i]->id << "; Adjacent (node id, edge length): ";
-			for (int j = 0; j < allNodes[i]->incidentEdges.size(); j++)
-				std::cout << "(" << allNodes[i]->incidentEdges[j]->secondNode->id << "," << allNodes[i]->incidentEdges[j]->length << ") ";
+		for (int i = 0; i < nodes.size(); i++) {
+			std::cout << "Node id: " << nodes[i]->id << "; Adjacent (node id, edge length): ";
+			for (int j = 0; j < nodes[i]->incidentEdges.size(); j++)
+				std::cout << "(" << nodes[i]->incidentEdges[j]->secondNode->id << "," << nodes[i]->incidentEdges[j]->length << ") ";
 			std::cout << std::endl;
 		}
 		std::cout << std::endl;
@@ -94,8 +90,8 @@ struct Graph {
 	
 	void displayOutputNodes() {
 		std::cout << "Output:" << std::endl;
-		for (int i = 0; i < allNodes.size(); i++)
-			std::cout << "Node id: " << allNodes[i]->id << "; Shortest length from node id 1: " << allNodes[i]->shortestLength << std::endl;
+		for (int i = 0; i < nodes.size(); i++)
+			std::cout << "Node id: " << nodes[i]->id << "; Shortest length from node id 1: " << nodes[i]->shortestLength << std::endl;
 	}
 };
 
