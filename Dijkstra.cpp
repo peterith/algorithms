@@ -54,14 +54,16 @@ struct Graph {
 		while (!minimumLengthHeap.empty()) {
 			Node* nodeToProcess = minimumLengthHeap.top();
 			minimumLengthHeap.pop();
-			nodeToProcess->isExplored = true;
-			for (int i = 0; i < nodeToProcess->incidentEdges.size(); i++) {
-				Node* neighbourNode = nodeToProcess->incidentEdges[i]->secondNode;
-				if (!neighbourNode->isExplored) {
-					int length = nodeToProcess->shortestLength + nodeToProcess->incidentEdges[i]->length;
-					if (length < neighbourNode->shortestLength) {
-						neighbourNode->shortestLength = length;
-						minimumLengthHeap.push(neighbourNode);
+			if (!nodeToProcess->isExplored) {
+				nodeToProcess->isExplored = true;
+				for (int i = 0; i < nodeToProcess->incidentEdges.size(); i++) {
+					Node* neighbourNode = nodeToProcess->incidentEdges[i]->secondNode;
+					if (!neighbourNode->isExplored) {
+						int length = nodeToProcess->shortestLength + nodeToProcess->incidentEdges[i]->length;
+						if (length < neighbourNode->shortestLength) {
+							neighbourNode->shortestLength = length;
+							minimumLengthHeap.push(neighbourNode);
+						}
 					}
 				}
 			}
